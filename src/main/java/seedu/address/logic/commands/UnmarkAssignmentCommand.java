@@ -158,10 +158,10 @@ public class UnmarkAssignmentCommand extends Command {
 
     /**
      * Validates that the specified `assignment` exists in the person's assignment set.
-     *
-     * @throws CommandException if the assignment is not present
+     * If not, adds the person to the `peopleWithoutAssignment` list.
      */
-    private void ensureAssignmentExists(List<Person> peopleWithoutAssignment, Set<Assignment> assignments, Person person) throws CommandException {
+    private void ensureAssignmentExists(List<Person> peopleWithoutAssignment,
+                                        Set<Assignment> assignments, Person person) {
         if (!assignments.contains(assignment)) {
             // Log helpful debug info to aid troubleshooting
             logger.warning(() -> String.format(
