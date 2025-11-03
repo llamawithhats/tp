@@ -483,6 +483,11 @@ Navigate through 50 previously inputted commands using keyboard shortcuts.
 * **Up Arrow Key (↑)**: Retrieves the previous command from history
 * **Down Arrow Key (↓)**: Retrieves the next command from history
 
+<div markdown="span" class="alert alert-warning"><span class="fas fa-exclamation-triangle" aria-hidden="true"></span> <strong>Caution:</strong>
+
+Navigation through command history only works for **successful** commands. Commands that resulted in errors are not saved in history.
+</div>
+
 #### Other shortcuts
 
 * **F1**: Opens the help window
