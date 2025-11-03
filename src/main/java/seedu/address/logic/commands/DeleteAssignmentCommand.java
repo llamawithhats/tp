@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.commons.util.ToStringBuilder;
@@ -37,6 +39,7 @@ import seedu.address.model.person.Phone;
 public class DeleteAssignmentCommand extends Command {
 
     public static final String COMMAND_WORD = "unassign";
+    private static final Logger logger = LogsCenter.getLogger(DeleteAssignmentCommand.class);
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Delete assignment(s) from the student identified "
             + "by the index number used in the displayed student list. \n"
@@ -70,6 +73,8 @@ public class DeleteAssignmentCommand extends Command {
         List<Person> lastShownList = model.getFilteredPersonList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
+            logger.warning("DeleteAssignmentCommand: invalid index " + index.getOneBased()
+                    + " for list size " + lastShownList.size());
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
@@ -114,8 +119,10 @@ public class DeleteAssignmentCommand extends Command {
                 .map(ClassGroup::getClassGroupName)
                 .collect(Collectors.toSet());
 
-        for (Assignment assignment : newAssignments) {
+        for (Assignment assignment: newAssignments) {
             if (!personClassGroupNames.contains(assignment.classGroupName)) {
+                logger.info("DeleteAssignmentCommand: student " + person.getName()
+                        + " not in class group " + assignment.classGroupName);
                 throw new CommandException(String.format(MESSAGE_STUDENT_NOT_IN_CLASS_GROUP,
                         assignment.classGroupName));
             }
@@ -133,7 +140,7 @@ public class DeleteAssignmentCommand extends Command {
     }
 
     /**
-     * Returns assignments requested for deletion that do not exist on the person.
+     * Returns assignments requested for deletion that do not exist for the person.
      */
     private static Set<Assignment> findNonExistentAssignments(Person person, DeleteAssignmentDescriptor desc) {
         Set<Assignment> requested = desc.getAssignments().orElse(Set.of());
@@ -165,6 +172,7 @@ public class DeleteAssignmentCommand extends Command {
                     .map(Assignment::toString)
                     .sorted()
                     .collect(Collectors.joining(", "));
+            logger.info("DeleteAssignmentCommand: requested assignments not found on person: " + missingNames);
             throw new CommandException(String.format(MESSAGE_ASSIGNMENT_NOT_EXIST, missingNames));
         }
 
@@ -217,6 +225,7 @@ public class DeleteAssignmentCommand extends Command {
          * A defensive copy of {@code assignments} is used internally.
          */
         public DeleteAssignmentDescriptor(DeleteAssignmentDescriptor toCopy) {
+            requireNonNull(toCopy);
             setAssignments(toCopy.assignments);
             setClassGroupName(toCopy.classGroupName);
         }
