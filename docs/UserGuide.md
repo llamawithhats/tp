@@ -6,8 +6,42 @@
 
 TutorTrack is a **desktop app** designed to help **Secondary School tutors** keep track of their **students, classes and assignments.** Unlike conventional contact management systems, TutorTrack is optimized for **rapid keyboard operation**, catering to tutors who favor typing-based workflows over mouse-driven ones.
 
-<!-- * Table of Contents -->
-<page-nav-print />
+## Target User
+This user guide is intended for **Secondary School tutors** who wish to efficiently manage their student information, class enrollments, and assignment tracking using TutorTrack.<br>
+
+**Assumptions about our target user:**
+* Singaporean Secondary School tutors or tutors familiar with the Singapore Secondary School system.
+* Manages a moderate number of students (~20-100 students) and classes (~5 classes).
+* Familiar with basic computer operations and comfortable using desktop applications.
+* Prefers keyboard commands for quick navigation and operation.
+
+### Table of Contents
+
+1. [Quick start](#quick-start)
+2. [Features](#features)
+   - [Viewing help](#viewing-help-help)
+   - [Adding a student](#adding-a-student-add)
+   - [Deleting a student](#deleting-a-student-delete)
+   - [Listing all students](#listing-all-students-list)
+   - [Editing a student](#editing-a-student-edit)
+   - [Locating students by name](#locating-students-by-name-find)
+   - [Filtering students by class](#filtering-students-by-class-filter)
+   - [Adding assignment(s) to a student](#adding-assignments-to-a-student)
+   - [Deleting assignment(s) from a student](#deleting-assignments-from-a-student-unassign)
+   - [Adding an assignment to all students in a class](#adding-an-assignment-to-all-students-in-a-class-assignall)
+   - [Deleting an assignment from all students in a class](#deleting-an-assignment-from-all-students-in-a-class-unassignall)
+   - [Marking an assignment as completed](#marking-an-assignment-as-completed-mark)
+   - [Unmarking an assignment as not completed](#unmarking-an-assignment-as-not-completed-unmark)
+   - [Adding class(es) to a student](#adding-classes-to-a-student-addclass)
+   - [Deleting class(es) from a student](#deleting-classes-from-a-student-deleteclass)
+   - [Clearing all entries](#clearing-all-entries-clear)
+   - [Undoing previous command](#undoing-previous-command-undo)
+   - [Redoing previously undone command](#redoing-previously-undone-command-redo)
+   - [Exiting the program](#exiting-the-program-exit)
+3. [Keyboard Shortcuts](#keyboard-shortcuts)
+4. [FAQ](#faq)
+5. [Known issues](#known-issues)
+6. [Command summary](#command-summary)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -57,6 +91,7 @@ TutorTrack is a **desktop app** designed to help **Secondary School tutors** kee
 --------------------------------------------------------------------------------------------------------------------
 
 ## Features
+Below are the available commands in TutorTrack. Use them to manage your students, classes and assignments effectively!
 
 <box type="info" seamless>
 
