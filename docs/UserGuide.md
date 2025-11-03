@@ -17,9 +17,8 @@ TutorTrack is a **desktop app** designed to help **Secondary School tutors** kee
    2. To verify your Java version, open a terminal and execute the command `java -version`. If Java is not installed or the version is below 17, please download and install the latest JDK from [here](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or use a package manager like Homebrew.
 
     <div markdown="block" class="alert alert-warning">
-
-    **:exclamation: Duplicate Checks:**<br>
-       **For Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+   
+   **For Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
     </div>
 
 2. Download the latest `.jar` file from [here](https://github.com/AY2526S1-CS2103T-F14b-3/tp/releases). Find it by scrolling down to the **Assets** section of the latest release.<br>
@@ -182,8 +181,8 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [l/LEVEL]`
 Examples:
 *  `edit 2 p/91234567` Edits the phone number of the 2nd student to be `91234567`.
 *  `edit 1 n/Alex Yeo l/2` Edits the name of the 1st student to be `Alex Yeo` and the level to `2`. <br>
-![before result for 'edit 1 n/Alex Yeo l/2'](images/editBeforeResult.png)<br>
-![after result for 'edit 1 n/Alex Yeo l/2'](images/editAfterResult.png)
+    * Before editing:<br> ![before result for 'edit 1 n/Alex Yeo l/2'](images/editBeforeResult.png)<br>
+    * After editing:<br> ![after result for 'edit 1 n/Alex Yeo l/2'](images/editAfterResult.png)
 
 ### Locating students by name: `find`
 
@@ -214,14 +213,15 @@ Format: `filter c/CLASS`
 * Only one class can be specified at a time.
 * Only students with an exact match to the class name will be shown.
 
-Examples:
-* `filter c/Math-1000` displays all students enrolled in the Math-1000 class.
-* `filter c/Chemistry-1400` followed by `filter c/Math-1000` displays all students enrolled in both Chemistry-1400 and Math-1000 class.
-
 <div markdown="span" class="alert alert-primary"><span class="fas fa-lightbulb" aria-hidden="true"></span> <strong>Tip:</strong>
 
 After a `filter` command, filtered list will remain for further operations (i.e. stacking commands on top of `filter` command is allowed). To get back to the full student list, use the [`list`](#listing-all-students--list) command.
 </div>
+
+Examples:
+* `filter c/Math-1000` displays all students enrolled in the Math-1000 class.
+* `filter c/Chem-1400` followed by `filter c/Math-2000` displays all students enrolled in both Chem-1400 and Math-2000 class.
+![result for 'filter c/Chem-1400' then 'filter c/Math-2000'](images/filterResult.png)
 
 <a id="adding-assignments-to-a-student"></a>
 ### Adding assignment(s) to a student: `assign`
@@ -395,7 +395,10 @@ If you accidentally deleted a student or made an unwanted change, use `undo` to 
 
 <div markdown="span" class="alert alert-warning"><span class="fas fa-exclamation-triangle" aria-hidden="true"></span> <strong>Caution:</strong>
 
-Undo/Redo only works for actions made in the **current session**. Once you leave or refresh, previous changes cannot be restored.
+Undo/Redo only works for:
+- Actions made in the **current session**. Once you leave or refresh, previous changes cannot be restored. 
+- Commands that **modify data**. Commands like `list`, `find`, `filter`, `help` do not affect data and thus cannot be undone/redone.
+
 </div>
 
 Examples:
