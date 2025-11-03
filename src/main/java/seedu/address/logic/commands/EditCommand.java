@@ -1,5 +1,7 @@
 package seedu.address.logic.commands;
 
+
+
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_DUPLICATE_PERSON;
 import static seedu.address.logic.Messages.MESSAGE_EDIT_PERSON_SUCCESS;
@@ -13,7 +15,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.commons.util.ToStringBuilder;
@@ -33,6 +37,8 @@ import seedu.address.model.person.Phone;
 public class EditCommand extends Command {
 
     public static final String COMMAND_WORD = "edit";
+    private static final Logger logger = LogsCenter.getLogger(EditCommand.class);
+
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the student identified "
             + "by the index number used in the displayed student list. "
@@ -43,7 +49,7 @@ public class EditCommand extends Command {
             + "[" + PREFIX_LEVEL + "LEVEL]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
-            + PREFIX_LEVEL + "Secondary 3";
+            + PREFIX_LEVEL + "3";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -66,6 +72,8 @@ public class EditCommand extends Command {
         List<Person> lastShownList = model.getFilteredPersonList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
+            logger.warning("EditCommand: invalid index " + index.getOneBased()
+                    + " for list size " + lastShownList.size());
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
@@ -163,6 +171,7 @@ public class EditCommand extends Command {
          * A defensive copy of {@code tags} is used internally.
          */
         public EditPersonDescriptor(EditPersonDescriptor toCopy) {
+            requireNonNull(toCopy);
             setName(toCopy.name);
             setPhone(toCopy.phone);
             setLevel(toCopy.level);

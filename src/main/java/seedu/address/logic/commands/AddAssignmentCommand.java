@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.commons.util.ToStringBuilder;
@@ -37,6 +39,7 @@ import seedu.address.model.person.Phone;
 public class AddAssignmentCommand extends Command {
 
     public static final String COMMAND_WORD = "assign";
+    private static final Logger logger = LogsCenter.getLogger(AddAssignmentCommand.class);
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Add Assignment(s) to the student identified "
             + "by the index number used in the displayed student list. \n"
@@ -71,6 +74,8 @@ public class AddAssignmentCommand extends Command {
 
         if (index.getZeroBased() >= lastShownList.size()) {
             // Index out of bounds
+            logger.warning("AddAssignmentCommand: invalid index " + index.getOneBased()
+                    + " for list size " + lastShownList.size());
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
 
@@ -96,6 +101,7 @@ public class AddAssignmentCommand extends Command {
                     .map(Assignment::toString)
                     .sorted()
                     .collect(Collectors.joining(", "));
+            logger.info("AddAssignmentCommand: duplicate assignments detected: " + duplicateNames);
             throw new CommandException(String.format(MESSAGE_DUPLICATE_ASSIGNMENT, duplicateNames));
         }
 
@@ -124,8 +130,10 @@ public class AddAssignmentCommand extends Command {
                 .map(ClassGroup::getClassGroupName)
                 .collect(Collectors.toSet());
 
-        for (Assignment assignment : newAssignments) {
+        for (Assignment assignment: newAssignments) {
             if (!personClassGroupNames.contains(assignment.classGroupName)) {
+                logger.info("AddAssignmentCommand: student " + person.getName() + " not in class group "
+                        + assignment.classGroupName);
                 throw new CommandException(String.format(MESSAGE_STUDENT_NOT_IN_CLASS_GROUP,
                         assignment.classGroupName));
             }
@@ -207,6 +215,7 @@ public class AddAssignmentCommand extends Command {
          * A defensive copy of {@code assignments} is used internally.
          */
         public AddAssignmentDescriptor(AddAssignmentDescriptor toCopy) {
+            requireNonNull(toCopy);
             setAssignments(toCopy.assignments);
             setClassGroupName(toCopy.classGroupName);
         }
