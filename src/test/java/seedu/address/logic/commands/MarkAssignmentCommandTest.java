@@ -102,7 +102,8 @@ public class MarkAssignmentCommandTest {
         MarkAssignmentCommand command = new MarkAssignmentCommand(Arrays.asList(Index.fromOneBased(1)), assignment);
 
         assertCommandFailure(command, model, String.format(
-                MESSAGE_INVALID_ASSIGNMENT_IN_PERSON, assignment.getAssignmentName())
+                MESSAGE_INVALID_ASSIGNMENT_IN_PERSON, assignment.getAssignmentName(), StringUtil.correctCapitalization(
+                        StringUtil.toTitleCase(person.getName().fullName)))
         );
     }
 

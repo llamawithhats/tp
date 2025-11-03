@@ -69,7 +69,7 @@ public class Messages {
 
     // mark & unmark
     public static final String MESSAGE_INVALID_ASSIGNMENT_IN_PERSON = "Assignment '%1$s' of specified class "
-            + "not found for specified student(s).";
+            + "not found for specified student(s): '%2$s'";
     public static final String MESSAGE_MARK_PERSON_SUCCESS = "Marked assignment '%1$s' from '%2$s'.";
     public static final String ALREADY_MARKED = "Assignment is already marked!";
     public static final String MESSAGE_UNMARK_PERSON_SUCCESS = "Unmarked assignment '%1$s' from '%2$s'.";
@@ -114,7 +114,7 @@ public class Messages {
      */
     public static String format(Person person) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(StringUtil.toTitleCase(person.getName().fullName))
+        builder.append(StringUtil.correctCapitalization(StringUtil.toTitleCase(person.getName().fullName)))
                 .append("; Phone: ")
                 .append(person.getPhone())
                 .append("; Level: ")
