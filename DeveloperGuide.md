@@ -43,6 +43,7 @@ If you plan to use Intellij IDEA (highly recommended):
    If using IDEA, follow the guide [_[se-edu/guides] IDEA: Configuring the code style_](https://se-education.org/guides/tutorials/intellijCodeStyle.html) to set up IDEA's coding style to match ours.
 
    <div markdown="span" class="alert alert-primary"><span class="fas fa-lightbulb" aria-hidden="true"></span> <strong>Tip:</strong>
+   
    Optionally, you can follow the guide [_[se-edu/guides] Using Checkstyle_](https://se-education.org/guides/tutorials/checkstyle.html) to find how to use the CheckStyle within IDEA e.g., to report problems _as_ you write code.
    </div>
 
@@ -80,7 +81,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -112,13 +113,13 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
 
 <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component,
 
@@ -129,7 +130,7 @@ The `UI` component,
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -161,36 +162,27 @@ How the parsing works:
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/java/seedu/address/model/Model.java)
 
-<puml src="diagrams/ModelClassDiagram.puml" width="450" />
-
+<puml src="diagrams/BetterModelClassDiagram.puml" width="650" />
 
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
-* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
-* does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
-
-<box type="info" seamless>
-
-**Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
-
-<puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
-
-</box>
-
+* stores the current `AddressBook` data, i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
+* stores a `CommandHistory` object that records executed commands for command review functionality.
+* stores an `AddressBookVersionManager` object that manages snapshots of past `AddressBook` states.
+* stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be observed; for example, the UI can be bound to this list so that it automatically updates when the data in the list changes.
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103T-F14b-3/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
 
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
-* inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
+* saves command history data (up to 50 commands) in text format, and can be used to initialise a CommandHistory Object in Model
+* inherits from both `AddressBookStorage` `CommandHistoryStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
 ### Common classes
@@ -203,103 +195,57 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
+### Undo/Redo Feature
 
-#### Proposed Implementation
+#### Implementation Overview
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+The undo/redo mechanism is facilitated by `AddressBookVersionManager`, which maintains two internal stacks to track the version history of the address book:
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+* `versionStack` — Stores all committed states of the address book in chronological order
+* `redoStack` — Stores states that have been undone and can be restored
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+The `AddressBookVersionManager` supports the following operations:
 
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+* `commit(ReadOnlyAddressBook)` — Saves the current address book state as a new version
+* `undo()` — Reverts the address book to its previous state
+* `redo()` — Restores a previously undone state
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+These operations are exposed in the `Model` interface as `Model#commit()`, `Model#undo()`, and `Model#redo()` respectively.
 
-<puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
+#### Design Considerations
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+**Aspect: Stack-based Architecture**
 
-<puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
+The implementation uses two stacks to efficiently manage version history. The behavior of each operation is as follows:
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+* When a command modifies the address book, `commit()` pushes the new state onto `versionStack` and clears `redoStack`
+* When `undo()` is called, the current state is moved from `versionStack` to `redoStack`
+* When `redo()` is called, the state is moved back from `redoStack` to `versionStack`
 
-<puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
+**Aspect: Clearing Redo History on New Commits**
 
-<box type="info" seamless>
+When a new commit is made after an undo operation, all redo history is cleared.
 
-**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
+* **Pros:**
+    * Maintains a linear, predictable history that prevents branching timelines
+    * Prevents potential state inconsistencies
+    * Simpler mental model for users
+* **Cons:**
+    * Users cannot return to undone states after making new changes
+    * May be unexpected behavior for users familiar with tree-based undo systems
+* **Alternative considered:** Maintaining a tree structure to preserve all branches
+    * **Reason for rejection:** This adds significant implementation complexity and could confuse users with multiple possible "future" states
 
-</box>
+**Aspect: Memory Management**
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+The version history is session-based and not persisted to disk.
 
-<puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
-
-
-<box type="info" seamless>
-
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
-
-</box>
-
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
-
-<puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="UndoSequenceDiagram-Logic" />
-
-<box type="info" seamless>
-
-**Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
-
-</box>
-
-Similarly, how an undo operation goes through the `Model` component is shown below:
-
-<puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="UndoSequenceDiagram-Model" />
-
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
-
-<box type="info" seamless>
-
-**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
-
-</box>
-
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
-
-<puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
-
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
-
-<puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
-
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<puml src="diagrams/CommitActivityDiagram.puml" width="250" />
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
-
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
+* **Pros:**
+    * Simpler implementation without serialization concerns
+    * No storage space concerns for large histories
+* **Cons:**
+    * Undo/redo history is lost when the application closes
+    * Cannot undo changes from previous sessions
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -441,7 +387,7 @@ Certain properties of the application can be controlled (e.g user preferences fi
 
 **Target user profile**:
 
-* tuition centre tutors
+* secondary school tutors
 * teaching a wide range of subjects and student levels
 * manage students with volatile environment (may sign up or quit midway)
 * prefer desktop apps over other types
@@ -768,7 +714,7 @@ Use case ends.
 11. User commands must execute within **1 second** under typical usage conditions (≤ 1000 students).
 12. In the event of a failed storage write, the application must **roll back changes** to prevent data corruption.
 13. Data integrity must be preserved across restarts; students and assignments saved before exit should remain consistent on relaunch.
-14. On invalid inputs or corrupted files, the program is expected to **fail gracefully** with clear, informative error messages (e.g., “Invalid command format! add: n/NAME p/PARENT_PHONE l/Secondary{1..4}”), without crashing.
+14. On invalid inputs or corrupted files, the program is expected to **fail gracefully** with clear, informative error messages (e.g., “Invalid command format! add: n/NAME p/PHONE l/LEVEL \[c/CLASS]...”), without crashing.
 15. The user interface must remain usable on screens with at least **1024×768 resolution**, without scrolling needed for core features.
 16. Deliverables should exclude unnecessary third-party libraries or oversized media assets, ensuring files are not bloated.
 
@@ -821,22 +767,139 @@ testers are expected to do more *exploratory* testing.
 
 1. _{ more test cases …​ }_
 
-### Deleting a person
 
-1. Deleting a person while all persons are being shown
+### Adding a student
 
-   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+1. Adding a student while all persons are being shown
+
+    1. Test case: `add n/John Doe p/12345678 l/3`<br>
+       Expected: Student with specified name, phone number and level is added to the list. Details of the added contact shown in the status message. 
+
+    1. Test case: `add n/John Doe p/12345678`<br>
+       Expected: No student is added. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect delete commands to try: `add`, `add x`, `...` (where x is not a class, level or phone number)<br>
+       Expected: Similar to previous.
+
+### Deleting a student
+
+1. Deleting a student while all students are being shown
+
+   1. Prerequisites: List all students using the `list` command. Multiple students in the list.
 
    1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message.
 
    1. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+      Expected: No student is deleted. Error details shown in the status message. Status bar remains the same.
 
    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
+### Editing a student
+
+1. Editing a student with all students being shown
+
+    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
+    1. Test case: `find 1 n/NEW_NAME`<br>
+       Expected: First student's name is updated. Details of the edited contact shown in the status message.
+
+    1. Test case: `edit 0`<br>
+       Expected: No student is edited. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect edit commands to try: `edit`, `edit x`, `...` (where x is larger than the list size)<br>
+       Expected: Similar to previous.
+
+### Adding a class
+
+1. Adding a class to a student
+
+    1. Prerequisites: List all students using the `list` command. Target student does not have the specified class.
+
+    1. Test case: `addclass 1 c/CLASS_NAME`<br>
+       Expected: Class `CLASS_NAME` is added to the first contact in the list. Details of the first contact shown in the status message.
+
+    1. Test case: `addclass 1`<br>
+       Expected: No class is added. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect edit commands to try: `addclass`, `addclass x`, `...` (where x is larger than the list size)<br>
+       Expected: Similar to previous.
+
+### Deleting a class
+
+1. Deleting a class from a student
+
+    1. Prerequisites: List all students using the `list` command. Target student has the specified class.
+
+    1. Test case: `deleteclass 1 c/CLASS_NAME`<br>
+       Expected: Class `CLASS_NAME` is deleted from the first contact in the list. Details of the first contact shown in the status message.
+
+    1. Test case: `deleteclass 1`<br>
+       Expected: No class is added. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect edit commands to try: `deleteclass`, `deleteclass x`, `...` (where x is larger than the list size)<br>
+       Expected: Similar to previous.
+
+### Adding an assignment from a student
+
+1. Adding an assignment to a student
+
+    1. Prerequisites: List all students using the `list` command. Target student has the specified class and does not have the specified assignment in that class.
+
+    1. Test case: `assign 1 c/CLASS a/ASSIGNMENT`<br>
+       Expected: Assignment `ASSIGNMENT` is added to the first contact in the list. Details of the first contact shown in the status message.
+
+    1. Test case: `assign 1`<br>
+       Expected: No assignment is added. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect edit commands to try: `assign`, `assign 1 c/x a/y`, `...` (where x is a class that the first contact does not have)<br>
+       Expected: Similar to previous.
+
+### Deleting an assignment from a student
+
+1. Deleting an assignment from a student
+
+    1. Prerequisites: List all students using the `list` command. Target student has the specified class and specified assignment(s) in that class.
+
+    1. Test case: `unassign 1 c/CLASS a/ASSIGNMENT2`<br>
+       Expected: Assignment `ASSIGNMENT` is deleted from the first contact in the list. Details of the first contact shown in the status message.
+
+    1. Test case: `unassign 1`<br>
+       Expected: No assignment is deleted. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect edit commands to try: `unassign`, `unassign 1 c/x a/y`, `...` (where x is a class that the first contact does not have)<br>
+       Expected: Similar to previous.
+
+### Adding an assignment to an entire class
+
+1. Adding an assignment to all students in a class
+
+    1. Prerequisites: List all students using the `list` command. Multiple students in the list have the specified class and does not have the specified assignment in that class.
+
+    1. Test case: `assignall c/CLASS a/ASSIGNMENT`<br>
+       Expected: Assignment `ASSIGNMENT` is added to all contacts in the list who have class `CLASS`. Success message shown with the number of students the assignment was added to.
+
+    1. Test case: `assignall `<br>
+       Expected: No assignment is added. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect edit commands to try: `assignall c/`, `assignall c/x a/y`, `...` (where all students in class x already have assignment y)<br>
+       Expected: Similar to previous.
+
+### Deleting an assignment from an entire class
+
+1. Deleting an assignment from all students in a class
+
+    1. Prerequisites: List all students using the `list` command. Multiple students in the list have the specified class and specified assignment in that class.
+
+    1. Test case: `unassignall c/CLASS a/ASSIGNMENT`<br>
+       Expected: Assignment `ASSIGNMENT` is deleted from all contacts in the list who have class `CLASS`. Success message shown with the number of students the assignment was deleted from.
+
+    1. Test case: `unassignall `<br>
+       Expected: No assignment is deleted. Error details shown in the status message. Status bar remains the same.
+
+    1. Other incorrect edit commands to try: `unassignall c/`, `unassignall c/x a/y`, `...` (where all students in class x do not have assignment y)<br>
+       Expected: Similar to previous.
 
 ### Saving data
 
@@ -848,6 +911,47 @@ testers are expected to do more *exploratory* testing.
 
 --------------------------------------------------------------------------------------------------------------------
 
+## **Appendix: Effort**
+
+A large portion of the team's development time was spent designing and implementing the `Assignment` model. The main difficulty was deciding how `Assignment` should relate to `ClassGroup`.
+
+After considering several alternatives (for example, making `Assignment` a standalone entity shared across classes, or making it owned entirely by `ClassGroup`), the team settled on an association relationship where each `Assignment` must be tagged to a `ClassGroup`. Concretely, an `Assignment` cannot exist in isolation in the system — it is always associated with a particular `ClassGroup`.
+
+Rationale and consequences:
+
+- Rationale: In our target context (tutees and their classes), assignments are almost always issued within the context of a class. Tagging an assignment to a class models this real-world workflow directly and avoids ambiguity when multiple classes use similar assignment names.
+- Implementation impact: Commands and storage were adjusted so that assignments are referenced together with their class (e.g., `ass1 (physics-1800)`), validation checks ensure a student belongs to the class before assigning/unassigning, and uniqueness/collision handling is scoped to a class.
+- Trade-offs: This creates a tighter coupling between `Assignment` and `ClassGroup`, and makes some commands slightly more verbose. It also required extra design and test effort to get the semantics right, especially around assign/unassign operations and persistence/migration of existing data.
+
+Two notable feature enhancements that consumed additional effort are described below.
+
+### Multi-range support for `mark` / `unmark`
+
+To improve productivity for tutors, we extended the `mark` and `unmark` commands to accept multiple indexes and index ranges in one command (for example: `mark 1-5 7 9-10 c/Math-2000 a/MathHW1`). This lets tutors mark or unmark many students in a single command instead of issuing repeated single-index commands (unlike AB3 which accepted only a single index per command).
+
+Design and implementation notes:
+
+- Parser: We updated the `MarkAssignmentCommandParser` / `UnmarkAssignmentCommandParser` to accept and normalize a sequence of tokens that represent either a single positive index or a `START-END` range. Ranges are expanded into individual indexes while preserving order and de-duplicating indexes where appropriate.
+- Validation: We perform strict validation on indexes and ranges (e.g., positive integers, `START <= END`, indexes within the current displayed list bounds) and surface clear error messages if the input is malformed.
+- Efficiency and correctness: The command implementation iterates the resolved list of target indexes and applies the per-student mark/unmark logic (including class membership checks and assignment existence checks). Where sensible, shared logic was reused from the single-index `mark`/`unmark` implementation to keep behaviour consistent and reduce duplicated code.
+- Recommended workflow: Because indexes refer to positions in the currently displayed list, we recommend using `filter c/CLASS` first to limit the list to a single class, then use an index range such as `1-10` to affect an entire class quickly. This both matches tutor workflows and avoids ambiguous index targets.
+- Testing: We added unit and integration tests for a range of cases: single indexes, multiple single indexes, single ranges, combinations of ranges and single indexes, overlapping ranges, out-of-bound indexes, and invalid formats.
+
+### `assignall` / `unassignall` commands
+
+We added `assignall` and `unassignall` to support class-level assignment management: `assignall c/CLASS a/ASSIGNMENT` assigns a particular assignment to every student in the specified class (skipping students who already have the assignment), and `unassignall` removes an assignment from every student in a class.
+
+Design and implementation notes:
+
+- Rationale: Tutors commonly assign work to an entire class rather than one student at a time. `assignall` and `unassignall` implement this real-world workflow directly and reduce repetitive operations for the user.
+- Code reuse: The commands reuse core validation and logic from the existing `assign`/`unassign` implementations (for example: class membership checks, duplicate assignment checks, and model updates). This reduced implementation effort and ensured consistent behaviour across the per-student and per-class APIs.
+- Edge cases: Commands intentionally skip students who already meet the target state (e.g., already have the assignment for `assignall`, or do not have the assignment for `unassignall`). When no student is affected, user-facing errors are produced to indicate that the operation made no changes.
+- Testing: We added tests to cover the normal path, the path where some students are affected and some are not, the path where no students in the class exist, and the path where none of the students needed updating (which should surface the appropriate error message).
+
+Overall, the decision to associate `Assignment` with `ClassGroup` and to add these command-level conveniences increased initial design and test effort, but produced a clearer user model and a more efficient workflow for tutors — which aligns better with our target users' mental model and daily use patterns.
+
+--------------------------------------------------------------------------------------------------------------------
+
 ## **Appendix: Planned Enhancements**
 
 Team size: 5
@@ -855,8 +959,8 @@ Team size: 5
 1. **Make accepted phone number formats more flexible and accurate:**
 Currently, we accept phone numbers that contain only numbers
 and are at least 3 digits long.
-We plan to make phone numbers be at least 8 digits long (in Singapore context) and accept formats with
-spaces, dashes, or plus signs (e.g., "9123 4567", "912-34567", "+65 91234567").
+We plan to make phone numbers be at least 8 digits long and accept formats with
+spaces, dashes, plus signs or brackets (e.g., "9123 4567", "912-34567", "+65 91234567", "(1800)9100-0019").
 2. **Make error messages for assign & unassign more cohesive:**
 Currently, if we try to assign to a student an assignment belonging to a class
 they are not in, we get error message

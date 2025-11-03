@@ -4,9 +4,9 @@
 
 # TutorTrack
 
-<img src="images/Ui_updated.png" width="100%" alt="Ui">
+<img src="images/UiUpdated.png" width="100%" alt="Ui">
 
-**TutorTrack is a desktop application designed to help Secondary School tutors manage important student contact details.** While it provides a Graphical User Interface (GUI), most interactions are optimized for the CLI (Command Line Interface) to enable faster and more efficient use.
+**TutorTrack is a desktop application designed to help Secondary School tutors manage important student contact details.** While it provides a Graphical User Interface (GUI), most interactions are optimized for the Command Line Interface (CLI) to enable faster and more efficient use.
 
 TutorTrack allows tutors to conveniently store and manage student information, manage classes and keep track of assignments.
 
