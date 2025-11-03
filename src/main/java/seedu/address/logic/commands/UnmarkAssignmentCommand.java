@@ -83,6 +83,7 @@ public class UnmarkAssignmentCommand extends Command {
         List<Person> unmarkedPersons = new ArrayList<>();
         List<Person> alreadyUnmarkedPersons = new ArrayList<>();
         List<Person> peopleToUnmark = new ArrayList<>();
+        List<Person> peopleWithoutAssignment = new ArrayList<>();
 
         // First validate indices and collect people to unmark
         for (Index targetIndex : targetIndices) {
@@ -92,7 +93,7 @@ public class UnmarkAssignmentCommand extends Command {
 
             Person personToUnmark = lastShownList.get(targetIndex.getZeroBased());
             Set<Assignment> personAssignments = getPersonAssignmentSet(personToUnmark);
-            ensureAssignmentExists(personAssignments, personToUnmark);
+            ensureAssignmentExists(peopleWithoutAssignment, personAssignments, personToUnmark);
 
             // Check if the assignment is already unmarked
             Assignment match = personAssignments.stream()
@@ -110,6 +111,16 @@ public class UnmarkAssignmentCommand extends Command {
         // If all people are already unmarked, throw an error
         if (peopleToUnmark.isEmpty() && !alreadyUnmarkedPersons.isEmpty()) {
             throw new CommandException(ALREADY_UNMARKED);
+        }
+
+        // If some people do not have the assignment, throw an error
+        if (!peopleWithoutAssignment.isEmpty()) {
+            String assignmentNameTitleCase = StringUtil.toTitleCase(assignment.getAssignmentName());
+            String personNames = peopleWithoutAssignment.stream()
+                    .map(p -> StringUtil.correctCapitalization(StringUtil.toTitleCase(p.getName().fullName)))
+                    .collect(Collectors.joining(", "));
+            throw new CommandException(String.format(MESSAGE_INVALID_ASSIGNMENT_IN_PERSON,
+                    assignmentNameTitleCase, personNames));
         }
 
         // Unmark assignments for people who aren't already unmarked
@@ -150,16 +161,14 @@ public class UnmarkAssignmentCommand extends Command {
      *
      * @throws CommandException if the assignment is not present
      */
-    private void ensureAssignmentExists(Set<Assignment> assignments, Person person) throws CommandException {
+    private void ensureAssignmentExists(List<Person> peopleWithoutAssignment, Set<Assignment> assignments, Person person) throws CommandException {
         if (!assignments.contains(assignment)) {
             // Log helpful debug info to aid troubleshooting
             logger.warning(() -> String.format(
                     "Person %s does not have assignment '%s'. Person assignments: %s",
                     person.getName(), assignment.toString(),
                     assignmentsToString(assignments)));
-            throw new CommandException(String.format(
-                    MESSAGE_INVALID_ASSIGNMENT_IN_PERSON, assignment.getAssignmentName())
-            );
+            peopleWithoutAssignment.add(person);
         }
     }
 
@@ -221,7 +230,7 @@ public class UnmarkAssignmentCommand extends Command {
     private String formatSuccessMessage(Assignment a, List<Person> persons) {
         String assignmentNameTitleCase = StringUtil.toTitleCase(a.getAssignmentName());
         List<String> names = persons.stream()
-                .map(p -> StringUtil.toTitleCase(p.getName().fullName))
+                .map(p -> StringUtil.correctCapitalization(StringUtil.toTitleCase(p.getName().fullName)))
                 .collect(Collectors.toList());
         String personNames = String.join(", ", names);
         return String.format(MESSAGE_UNMARK_PERSON_SUCCESS, assignmentNameTitleCase, personNames);

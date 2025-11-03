@@ -83,6 +83,7 @@ public class MarkAssignmentCommand extends Command {
         List<Person> markedPersons = new ArrayList<>();
         List<Person> alreadyMarkedPersons = new ArrayList<>();
         List<Person> peopleToMark = new ArrayList<>();
+        List<Person> peopleWithoutAssignment = new ArrayList<>();
 
         // First validate indices and collect people to mark
         for (Index targetIndex : targetIndices) {
@@ -92,7 +93,7 @@ public class MarkAssignmentCommand extends Command {
 
             Person personToMark = lastShownList.get(targetIndex.getZeroBased());
             Set<Assignment> personAssignments = getPersonAssignmentSet(personToMark);
-            ensureAssignmentExists(personAssignments, personToMark);
+            ensureAssignmentExists(peopleWithoutAssignment, personAssignments, personToMark);
 
             // Check if the assignment is already marked
             Assignment match = personAssignments.stream()
@@ -110,6 +111,16 @@ public class MarkAssignmentCommand extends Command {
         // If all people are already marked, throw an error
         if (peopleToMark.isEmpty() && !alreadyMarkedPersons.isEmpty()) {
             throw new CommandException(ALREADY_MARKED);
+        }
+
+        // If some people do not have the assignment, throw an error
+        if (!peopleWithoutAssignment.isEmpty()) {
+            String assignmentNameTitleCase = StringUtil.toTitleCase(assignment.getAssignmentName());
+            String personNames = peopleWithoutAssignment.stream()
+                    .map(p -> StringUtil.correctCapitalization(StringUtil.toTitleCase(p.getName().fullName)))
+                    .collect(Collectors.joining(", "));
+            throw new CommandException(String.format(MESSAGE_INVALID_ASSIGNMENT_IN_PERSON,
+                    assignmentNameTitleCase, personNames));
         }
 
         // Mark assignments for people who aren't already marked
@@ -150,16 +161,14 @@ public class MarkAssignmentCommand extends Command {
      *
      * @throws CommandException if the assignment is not present
      */
-    private void ensureAssignmentExists(Set<Assignment> assignments, Person person) throws CommandException {
+    private void ensureAssignmentExists(List<Person> peopleWithoutAssignment, Set<Assignment> assignments, Person person) {
         if (!assignments.contains(assignment)) {
             // Log helpful debug info to aid troubleshooting
             logger.warning(() -> String.format(
                     "Person %s does not have assignment '%s'. Person assignments: %s",
                     person.getName(), assignment.toString(),
                     assignmentsToString(assignments)));
-            throw new CommandException(String.format(
-                    MESSAGE_INVALID_ASSIGNMENT_IN_PERSON, assignment.getAssignmentName())
-            );
+            peopleWithoutAssignment.add(person);
         }
     }
 
@@ -221,7 +230,7 @@ public class MarkAssignmentCommand extends Command {
     private String formatSuccessMessage(Assignment a, List<Person> persons) {
         String assignmentNameTitleCase = StringUtil.toTitleCase(a.getAssignmentName());
         List<String> names = persons.stream()
-                .map(p -> StringUtil.toTitleCase(p.getName().fullName))
+                .map(p -> StringUtil.correctCapitalization(StringUtil.toTitleCase(p.getName().fullName)))
                 .collect(Collectors.toList());
         String personNames = String.join(", ", names);
         return String.format(MESSAGE_MARK_PERSON_SUCCESS, assignmentNameTitleCase, personNames);
